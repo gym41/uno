@@ -4,6 +4,7 @@ let selectedCards = [];
 let lastData = null;
 let lastTopCard = null;
 let suspendUpdates = false;
+let btn = null;
 
 function showWildColorPicker() {
   return new Promise(resolve => {
@@ -104,10 +105,36 @@ socket.on('game_state', (data) => {
 	if (suspendUpdates && isMyPass(data)) return;
 
       lastData = data;
-      const div = document.getElementById('game');
-      div.innerHTML = '';
+	  
+	  
+	  
+     const div = document.getElementById('game');
+	 div.innerHTML = '';
 
-      div.innerHTML += `<p>Сейчас ходит: <strong>${data.current_player}</strong></p>`;
+   	const ul = document.createElement('ul');	
+	ul.classList.add('horizontal-list');
+	div.appendChild(ul);
+	
+	data.players.forEach(player => {
+	const li = document.createElement('li');
+	li.textContent = player;
+
+	if (player === data.current_player && data.direction==1) {
+		li.classList.add('current-player-right');
+	}else if(player === data.current_player && data.direction==-1){
+		li.classList.add('current-player-left');
+	}else {
+		li.classList.add('non-current-player');
+	}
+
+  ul.appendChild(li);
+});
+	
+
+	
+	
+	//	const li = document.createElement('li');
+
 
       const topCard = data.draw_pile[data.draw_pile.length - 1];
       lastTopCard = topCard;
@@ -127,7 +154,18 @@ socket.on('game_state', (data) => {
 	  
 	  
 	  
-	  
+		const row = document.createElement('div');
+		row.classList.add('row');
+		
+		const players = document.createElement('div');
+		players.classList.add('players');
+		row.appendChild(players);
+		
+		
+		
+		
+		
+		
 		const tableCard_DrawPile = document.createElement('div');
 		tableCard_DrawPile.classList.add('tableCard_DrawPile');
 		
@@ -174,7 +212,8 @@ socket.on('game_state', (data) => {
 
       drawPile.appendChild(drawImg);
 	  tableCard_DrawPile.appendChild(drawPile);
-      div.appendChild(tableCard_DrawPile);
+	  row.appendChild(tableCard_DrawPile);
+      div.appendChild(row);
 
       const hand = data.hands[USER] || [];
 
@@ -198,7 +237,7 @@ socket.on('game_state', (data) => {
         img.dataset.type = card.type || '';
         img.dataset.id = card.id;
         img.style.width = '80px';
-        img.style.marginRight = '5px';
+        //img.style.marginRight = '5px';
         img.style.cursor = 'pointer';
 		img.classList.add('hand');
 
@@ -212,9 +251,9 @@ socket.on('game_state', (data) => {
 		wrapper.classList.add('hand');
         wrapper.style.position = 'relative';
         wrapper.style.display = 'inline-block';
-        wrapper.style.width = '80px';
-        wrapper.style.height = '120px';
-        wrapper.style.margin = '9px';
+        //wrapper.style.width = '120px';
+        //wrapper.style.height = '120px';
+        wrapper.style.margin = '5px';
         wrapper.appendChild(img);
 
         if ((card.type === 'wild' || card.type === 'wild_draw4') && isAvalible(data, topCard, card)) {
@@ -270,6 +309,7 @@ socket.on('game_state', (data) => {
 				img.style.border = 'none';
 				img.classList.remove('hand-clicked');
 				img.parentElement.classList.remove('hand-clicked');
+				btn.classList.remove('neon-button-on');
               return;
             }
 
@@ -281,7 +321,8 @@ socket.on('game_state', (data) => {
               selectedCards.push({ ...card });
 			  img.classList.add('hand-clicked');
 			  img.parentElement.classList.add('hand-clicked');
-              img.style.border = '2px solid green';
+			  btn.classList.add('neon-button-on');
+              //img.style.border = '2px solid green';
             } else {
               const first = selectedCards[0];
               if (card.value === first.value) {
@@ -302,10 +343,21 @@ socket.on('game_state', (data) => {
       div.appendChild(handContainer);
 
       if (!document.getElementById('playSelectedBtn')) {
-        const btn = document.createElement('button');
+		 
+		const buttons = document.createElement('div');
+		buttons.classList.add('buttons');
+		row.appendChild(buttons);
+		 		 
+        btn = document.createElement('button');
+		
         btn.textContent = 'Сыграть';
         btn.id = 'playSelectedBtn';
-        btn.style.marginTop = '10px';
+        //btn.style.marginTop = '10px';
+		btn.classList.add('neon-button-off');
+		
+		buttons.appendChild(btn);
+		
+		
         btn.addEventListener('click', () => {
           if (selectedCards.length === 0) return;
 
@@ -387,7 +439,7 @@ socket.on('game_state', (data) => {
           selectedCards = [];
         });
 
-        div.appendChild(btn);
+        //div.appendChild(btn);
       }
 });
 
