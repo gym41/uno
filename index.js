@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { Server } = require('socket.io');
 
+app.use(express.static(path.join(__dirname, 'public')));
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
