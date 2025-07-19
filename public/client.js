@@ -128,20 +128,23 @@ socket.on('game_state', (data) => {
 	  
 	  
 	  
-
+		const tableCard_DrawPile = document.createElement('div');
+		tableCard_DrawPile.classList.add('tableCard_DrawPile');
+		
       if (topCard) {
         const tableCard = document.createElement('div');
-        tableCard.innerHTML = `<p>На столе:</p>`;
+        //tableCard.innerHTML = `<p>На столе:</p>`;
         const img = document.createElement('img');
         img.src = getCardImageFilename(topCard);
         img.alt = `${topCard.color} ${topCard.value}`;
         img.style.width = '80px';
         tableCard.appendChild(img);
-        div.appendChild(tableCard);
+		tableCard_DrawPile.appendChild(tableCard);
+        
       }
 
       const drawPile = document.createElement('div');
-      drawPile.innerHTML = `<p>Колода:</p>`;
+      //drawPile.innerHTML = `<p>Колода:</p>`;
       const drawImg = document.createElement('img');
       drawImg.src = '/img/cards/uno.png';
       drawImg.alt = 'Добор';
@@ -170,7 +173,8 @@ socket.on('game_state', (data) => {
       });
 
       drawPile.appendChild(drawImg);
-      div.appendChild(drawPile);
+	  tableCard_DrawPile.appendChild(drawPile);
+      div.appendChild(tableCard_DrawPile);
 
       const hand = data.hands[USER] || [];
 
@@ -179,10 +183,10 @@ socket.on('game_state', (data) => {
       div.appendChild(handTitle);
 
       const handContainer = document.createElement('div');
-      handContainer.style.display = 'flex';
-	  
-	  handContainer.style.flexWrap = 'wrap'; // позволяем перенос строк
-	handContainer.style.maxWidth = (14 * 90) + 'px'; // 14 карт по 80px + margin
+	  handContainer.classList.add('handContainer');
+     // handContainer.style.display = 'flex';
+	  //handContainer.style.flexWrap = 'wrap'; // позволяем перенос строк
+	//handContainer.style.maxWidth = (12 * 90) + 'px'; // 14 карт по 80px + margin
 
 
       hand.forEach((card) => {
@@ -196,6 +200,7 @@ socket.on('game_state', (data) => {
         img.style.width = '80px';
         img.style.marginRight = '5px';
         img.style.cursor = 'pointer';
+		img.classList.add('hand');
 
         const isSelected = selectedCards.some(sel => sel.id === card.id);
         if (isSelected) {
@@ -204,6 +209,7 @@ socket.on('game_state', (data) => {
 
         const wrapper = document.createElement('div');
         wrapper.classList.add('uno-card');
+		wrapper.classList.add('hand');
         wrapper.style.position = 'relative';
         wrapper.style.display = 'inline-block';
         wrapper.style.width = '80px';
@@ -260,8 +266,10 @@ socket.on('game_state', (data) => {
             const index = selectedCards.findIndex(sel => sel.id === card.id);
 
             if (index !== -1) {
-              selectedCards.splice(index, 1);
-              img.style.border = 'none';
+				selectedCards.splice(index, 1);
+				img.style.border = 'none';
+				img.classList.remove('hand-clicked');
+				img.parentElement.classList.remove('hand-clicked');
               return;
             }
 
@@ -271,11 +279,15 @@ socket.on('game_state', (data) => {
                 return;
               }
               selectedCards.push({ ...card });
+			  img.classList.add('hand-clicked');
+			  img.parentElement.classList.add('hand-clicked');
               img.style.border = '2px solid green';
             } else {
               const first = selectedCards[0];
               if (card.value === first.value) {
                 selectedCards.push({ ...card });
+				img.classList.add('hand-clicked');
+				img.parentElement.classList.add('hand-clicked');
                 img.style.border = '2px solid green';
               } else {
                 alert("Можно выбрать только карты с одинаковым значением");
