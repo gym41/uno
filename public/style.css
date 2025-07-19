@@ -2,7 +2,7 @@
   .hand {
     transition: transform 0.3s ease;
   }
-
+	
   .hand:hover {
     transform: scale(1.1); /* увеличивает изображение на 5% */
   }
@@ -12,19 +12,44 @@
 	transform: scale(1.1);
 }
 
+.row{
+ position: relative;
+    width: 100%;
+    min-height: 150px;
+}
+
+.players {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 150px;
+/*    height: 100%;*/
+    background: lightcoral;
+  }
+  
+  .buttons {
+	position: absolute;
+    top: 25px;
+    width: 150px;
+/*    height: 100%;*/
+    right: 10px;
+  }
+
   .tableCard_DrawPile {
     display: flex;
-    justify-content: center;  /* по горизонтали */
-    align-items: center;      /* по вертикали (если задана высота) */
-    gap: 10px;                /* отступы между дивами (по желанию) */
-	width: 100%; 
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 100vw;
+    margin: 0 auto;
+    box-sizing: border-box;
   }
   
   .handContainer{
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	background: #eee;
+
   }
 
 /*  .tableCard_DrawPile > div {
@@ -37,17 +62,7 @@
 
 
 .uno-card {
-  width: 120px;
-  height: 180px;
-  background: black;
-  color: white;
-  font-weight: bold;
-  font-size: 24px;
-  border-radius: 16px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+
 }
 
 .uno-card.clicked {
@@ -78,7 +93,7 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 8px;
+  gap: 7px;
   z-index: 1;
 }
 
@@ -107,4 +122,145 @@
     transform: scale(1);
   }
 }
+
+.horizontal-list {
+	display: flex;
+	justify-content: center;
+	gap: 10px; /* расстояние между элементами */
+	list-style: none; /* убрать маркеры */
+	padding: 5px;
+	margin-bottom: 5px;
+}
+
+.current-player-right {
+  position: relative;
+  margin-top: 20px; /* пространство для стрелки */
+  color: #99cc99; /* ярко-зелёный */
+  font-weight: bold;
+  font-size: 25px;
+  margin-bottom: 20px;
+
+   
+text-shadow:
+	0 0 1px #77aa77,
+    0 0 2px #77aa77,
+    0 0 4px #669966,
+    0 0 6px #557755;
+}
+
+.current-player-right::before {
+  content: "⮕"; /* или любая другая стрелка */
+  position: absolute;
+  top: -30px; /* выше текста */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  color: ##aaffaa;
+}
+
+.current-player-left {
+  position: relative;
+  margin-top: 20px; /* пространство для стрелки */
+  color: ##aaffaa; /* ярко-зелёный */
+  font-weight: bold;
+    font-size: 25px;
+	margin-bottom: 20px;
+
+   
+text-shadow:
+    0 0 2px #66ff66,
+    0 0 4px #66ff66,
+    0 0 8px #33cc33,
+    0 0 12px #228822;
+}
+
+.current-player-left::before {
+  content: "⬅"; /* или любая другая стрелка */
+  position: absolute;
+  top: -30px; /* выше текста */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  color: ##aaffaa;
+}
+
+.non-current-player {
+  position: relative;
+  font-weight: bold;
+  margin-top: 20px; /* пространство для стрелки */
+  text-align: center;
+  font-size: 25px;
+  color: #99cc99;
+    margin-bottom: 20px;
+}
+
+
+
+  .neon-button-off {
+    position: relative;
+    display: inline-block;
+    padding: 14px 32px;
+    color: #99cc99; /* основной текст */
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: transparent;
+    border: 2px solid #88bb88;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 0;
+    box-shadow: 0 0 4px #77aa77, 0 0 8px #77aa77 inset;
+    transition: 0.3s;
+  }
+  
+  .neon-button-on {
+    position: relative;
+    display: inline-block;
+    padding: 14px 32px;
+    color: #99cc99; /* основной текст */
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: transparent;
+    border: 2px solid #88bb88;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 0;
+    box-shadow: 0 0 4px #77aa77, 0 0 8px #77aa77 inset;
+    transition: 0.3s;
+  }
+
+  .neon-button-on::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #88bb88, transparent);
+    animation: move-light 2s linear infinite;
+    z-index: -1;
+  }
+
+  @keyframes move-light {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  .neon-button:hover {
+    box-shadow: 0 0 6px #99cc99, 0 0 12px #99cc99 inset;
+    color: #b0deb0;
+    border-color: #99cc99;
+  }
+  
+ body {
+  background-color: black;
+}
+
 </style>
