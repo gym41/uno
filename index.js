@@ -8,8 +8,9 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const gameFile = path.join(__dirname, 'game.json');
+app.use(express.static('public'));
 
 // Считываем текущее состояние игры
 function readGameState() {
@@ -52,8 +53,6 @@ io.on('connection', (socket) => {
     console.log('🔌 Клиент отключился');
   });
 });
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 server.listen(PORT, () => {
   console.log(`🚀 Сервер запущен на порту ${PORT}`);
