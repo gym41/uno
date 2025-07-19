@@ -1,0 +1,73 @@
+<style>
+.uno-card {
+  width: 120px;
+  height: 180px;
+  background: black;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  border-radius: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.uno-card.clicked {
+  transform: scale(1.1) translateY(-10px);
+}
+
+.uno-card.clicked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: red;
+  opacity: 0.7;
+  z-index: 0;
+  animation: colorFlash 0.8s linear forwards;
+}
+
+@keyframes colorFlash {
+  0%   { background: red; }
+  25%  { background: yellow; }
+  50%  { background: limegreen; }
+  75%  { background: dodgerblue; }
+  100% { background: transparent; }
+}
+
+.color-picker {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 1;
+}
+
+.color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.5);
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.color.red    { background: red; }
+.color.yellow { background: yellow; }
+.color.green  { background: limegreen; }
+.color.blue   { background: dodgerblue; }
+
+.color.show {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>
