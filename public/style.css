@@ -1,4 +1,41 @@
 <style>
+  .hand {
+    transition: transform 0.3s ease;
+  }
+
+  .hand:hover {
+    transform: scale(1.1); /* увеличивает изображение на 5% */
+  }
+
+.hand-clicked{
+	transition: transform 0.3s ease;
+	transform: scale(1.1);
+}
+
+  .tableCard_DrawPile {
+    display: flex;
+    justify-content: center;  /* по горизонтали */
+    align-items: center;      /* по вертикали (если задана высота) */
+    gap: 10px;                /* отступы между дивами (по желанию) */
+	width: 100%; 
+  }
+  
+  .handContainer{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	background: #eee;
+  }
+
+/*  .tableCard_DrawPile > div {
+    width: 100px;
+    height: 100px;
+    background: lightblue;
+  }*/
+
+
+
+
 .uno-card {
   width: 120px;
   height: 180px;
