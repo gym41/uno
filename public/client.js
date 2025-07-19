@@ -1,3 +1,4 @@
+const urlParams = new URLSearchParams(window.location.search);
 const USER = urlParams.get('name') || 'Гость';
 let selectedCards = [];
 let lastData = null;
