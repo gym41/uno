@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Генератор колоды UNO</title>
+<script src="/socket.io/socket.io.js"></script> <!-- socket.io клиент -->
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+  label { display: block; margin-top: 10px; }
+  input { width: 100%; padding: 5px; margin-top: 3px; }
+  button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+  pre { background: #f4f4f4; padding: 10px; white-space: pre-wrap; word-wrap: break-word; max-height: 300px; overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<h1>Генератор колоды UNO</h1>
+
+<form id="playersForm">
+  <p>Введите имена игроков (пустое поле — игрок отсутствует):</p>
+  <label>Игрок 1: <input type="text" name="player" /></label>
+  <label>Игрок 2: <input type="text" name="player" /></label>
+  <label>Игрок 3: <input type="text" name="player" /></label>
+  <label>Игрок 4: <input type="text" name="player" /></label>
+  <label>Игрок 5: <input type="text" name="player" /></label>
+  <label>Игрок 6: <input type="text" name="player" /></label>
+  <label>Игрок 7: <input type="text" name="player" /></label>
+  <label>Игрок 8: <input type="text" name="player" /></label>
+
+  <button type="button" id="generateBtn">Сгенерировать</button>
+</form>
+
+<h2>Результат (JSON):</h2>
+<pre id="result"></pre>
+
+<script>
+const socket = io();
+
+socket.on('connect', () => {
+  console.log('Подключились к WebSocket серверу');
+});
+
+ function saveGameState(newState) {
+  socket.emit('update_game_state', newState);
+}
+  function generateUnoDeck() {
+    const colors = ['red', 'green', 'blue', 'yellow'];
+    const values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'skip', 'reverse', 'draw2'];
+    const deck = [];
+    let idCounter = 1;
+
+    colors.forEach(color => {
+      deck.push({ id: idCounter++, color, value: '0', type: 'number' });
+
+      values.slice(1).forEach(value => {
+        deck.push({ id: idCounter++, color, value, type: isNaN(value) ? value : 'number' });
+        deck.push({ id: idCounter++, color, value, type: isNaN(value) ? value : 'number' });
+      });
+    });
+
+    for (let i = 0; i < 4; i++) {
+      deck.push({ id: idCounter++, color: 'black', value: 'wild', type: 'wild' });
+      deck.push({ id: idCounter++, color: 'black', value: 'wild_draw4', type: 'wild_draw4' });
+    }
+
+    return deck;
+  }
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  document.getElementById('generateBtn').addEventListener('click', () => {
+    const inputs = document.querySelectorAll('input[name="player"]');
+    const players = [];
+
+    inputs.forEach(input => {
+      const trimmed = input.value.trim();
+      if (trimmed) players.push(trimmed);
+    });
+
+    if (players.length === 0) {
+      alert('Введите хотя бы одного игрока!');
+      return;
+    }
+
+    let deck = generateUnoDeck();
+    deck = shuffle(deck);
+
+    // Создаем пустые руки
+    const hands = {};
+    players.forEach(p => hands[p] = []);
+
+    // Раздаем по 5 карт каждому игроку из колоды
+    players.forEach(player => {
+      for (let i = 0; i < 5; i++) {
+        const card = deck.shift();
+        if (card) {
+          hands[player].push(card);
+        }
+      }
+    });
+
+    const result = {
+      players,
+      hands,
+      discard: [],
+      draw_pile: deck,
+      current_player: players[0],
+      direction: 1
+    };
+
+    document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+	
+	saveGameState(result);
+	
+	
+	
+	
+  });
+
+</script>
+
+</body>
+</html>
