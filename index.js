@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const { Server } = require('socket.io');
 
-app.use(express.static(path.join(__dirname, 'public')));
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -53,6 +52,8 @@ io.on('connection', (socket) => {
     console.log('🔌 Клиент отключился');
   });
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 server.listen(PORT, () => {
   console.log(`🚀 Сервер запущен на порту ${PORT}`);
