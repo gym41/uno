@@ -176,7 +176,7 @@ text-shadow:
 .current-player-left {
   position: relative;
   margin-top: 20px; /* пространство для стрелки */
-  color: ##aaffaa; /* ярко-зелёный */
+  color: #99cc99; /* ярко-зелёный */
   text-align: center;
   font-weight: bold;
     font-size: 25px;
@@ -184,10 +184,10 @@ text-shadow:
 
    
 text-shadow:
-    0 0 2px #66ff66,
-    0 0 4px #66ff66,
-    0 0 8px #33cc33,
-    0 0 12px #228822;
+    0 0 1px #77aa77,
+    0 0 2px #77aa77,
+    0 0 4px #669966,
+    0 0 6px #557755;
 }
 
 .current-player-left::before {
