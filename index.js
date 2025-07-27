@@ -12,7 +12,7 @@ const PORT = 3000;
 const gameFile = path.join(__dirname, 'game.json');
 app.use(express.static('public'));
 
-// Считываем текущее состояние игры
+
 function readGameState() {
   try {
     const data = fs.readFileSync(gameFile, 'utf-8');
@@ -23,7 +23,7 @@ function readGameState() {
   }
 }
 
-// Сохраняем новое состояние игры
+
 function saveGameState(state) {
   fs.writeFileSync(gameFile, JSON.stringify(state, null, 2));
 }
@@ -35,18 +35,25 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log('🟢 Новый клиент подключился');
 
-  // При подключении — сразу отдаем состояние
+
   socket.emit('game_state', readGameState());
 
-  // Когда клиент запрашивает состояние
+
   socket.on('get_game_state', () => {
     socket.emit('game_state', readGameState());
   });
 
-  // Когда клиент отправляет обновленное состояние
+
   socket.on('update_game_state', (newState) => {
     saveGameState(newState);
-    io.emit('game_state', newState); // Рассылаем всем
+    io.emit('game_state', newState);
+  });
+  
+  socket.on('chat_message', (message) => {
+
+	console.log('пришло сообщение');
+    io.emit('chat_message', message);
+	
   });
 
   socket.on('disconnect', () => {
