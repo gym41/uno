@@ -1,10 +1,32 @@
 const urlParams = new URLSearchParams(window.location.search);
-const USER = urlParams.get('name') || 'Гость';
+const USER = urlParams.get('name') || 'Гість';
 let selectedCards = [];
 let lastData = null;
 let lastTopCard = null;
 let suspendUpdates = false;
 let btn = null;
+
+function showPopup(message) {
+  const popup = document.createElement('div');
+  popup.textContent = message;
+
+  Object.assign(popup.style, {
+    position: 'fixed',
+    top: '30%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#222',
+    color: '#fff',
+    padding: '20px 30px',
+    fontSize: '20px',
+    borderRadius: '10px',
+    boxShadow: '0 0 15px rgba(0,0,0,0.5)',
+    zIndex: '10000',
+    textAlign: 'center'
+  });
+
+  document.body.appendChild(popup);
+}
 
 function showWildColorPicker() {
   return new Promise(resolve => {
@@ -101,10 +123,18 @@ socket.on('connect', () => {
   console.log('Подключились к WebSocket серверу');
 });
 
+const textBox = document.createElement('div');
+
 socket.on('game_state', (data) => {
 	if (suspendUpdates && isMyPass(data)) return;
-
-      lastData = data;
+	
+	const winner = data.players.find(player => data.hands[player].length === 0);
+	if (winner) {
+		showPopup(`🎉 Переміг ${winner}!`);
+		return
+	}
+	
+     lastData = data;
 	  
 	  
 	  
@@ -117,7 +147,16 @@ socket.on('game_state', (data) => {
 	
 	data.players.forEach(player => {
 	const li = document.createElement('li');
-	li.textContent = player;
+	
+	const mainText = document.createElement('span');
+	mainText.textContent = player;
+	li.appendChild(mainText);
+
+
+	const subText = document.createElement('div');
+	subText.textContent = data.hands[player].length;
+	subText.classList.add('subtext');
+	li.appendChild(subText);
 
 	if (player === data.current_player && data.direction==1) {
 		li.classList.add('current-player-right');
@@ -140,6 +179,8 @@ socket.on('game_state', (data) => {
       lastTopCard = topCard;
 	  
 	  
+	  
+	  
 	  if(topCard.value=="draw2" && isMyPass(data) && !hasDraw2Card(data) && data.draw2 != 0){
 		
 		for (let i = 0; i < data.draw2; i++) {
@@ -148,6 +189,7 @@ socket.on('game_state', (data) => {
 				data.hands[USER].push(drawnCard);
 			}
 		}	
+		addText(USER+" бере "+data.draw2+" карти");
 		data.draw2 = 0;		
 		saveGameState(data);
 	  }
@@ -170,7 +212,7 @@ socket.on('game_state', (data) => {
 		tableCard_DrawPile.classList.add('tableCard_DrawPile');
 		
       if (topCard) {
-        const tableCard = document.createElement('div');
+        const tableCard = document.createElement('div');		
         //tableCard.innerHTML = `<p>На столе:</p>`;
         const img = document.createElement('img');
         img.src = getCardImageFilename(topCard);
@@ -178,35 +220,43 @@ socket.on('game_state', (data) => {
         img.style.width = '80px';
         tableCard.appendChild(img);
 		tableCard_DrawPile.appendChild(tableCard);
+		img.style.borderRadius = "15%";
+		
+		if (topCard.type === 'wild' || topCard.type === 'wild_draw4') {
+		  img.style.boxShadow = `0 0 12px 4px ${topCard.color}`;
+		  }
         
       }
+	  
+	  
 
       const drawPile = document.createElement('div');
       //drawPile.innerHTML = `<p>Колода:</p>`;
       const drawImg = document.createElement('img');
       drawImg.src = '/img/cards/uno.png';
-      drawImg.alt = 'Добор';
-      drawImg.style.width = '80px';
+      drawImg.alt = 'колода';
+      drawImg.style.width = '77px';
       drawImg.style.cursor = 'pointer';
 
       drawImg.addEventListener('click', () => {
         if (!isMyPass(data)) {
-          alert("Сейчас не ваш ход!");
+          alert("Зараз не ваш хід!");
           return;
         }
 
         if (data.draw_pile.length === 0) {
-          alert("Колода пуста!");
+          alert("Колода порожня!");
           return;
         }
 
         if (!isAvalibleNewCard(data, topCard)) {
-          alert("Вам есть чем ходить!");
+          alert("Вам є чим ходити!");
           return;
         }
 
         const drawnCard = data.draw_pile.shift();
         data.hands[USER].push(drawnCard);
+		addText(USER+" бере карту");
         saveGameState(data);
       });
 
@@ -216,11 +266,41 @@ socket.on('game_state', (data) => {
       div.appendChild(row);
 
       const hand = data.hands[USER] || [];
+	  
+	const field = document.createElement('div');
+	div.appendChild(field);
+	field.classList.add('field');
+	
+	
+	
+	 //const textBox = document.createElement('div');
+	 textBox.classList.add('textBox');
+	field.appendChild(textBox);
+	
+  
+ function addText(line) {
+  const isAtBottom = Math.abs(textBox.scrollHeight - textBox.scrollTop - textBox.clientHeight) < 5;
 
-      const handTitle = document.createElement('h3');
-      handTitle.textContent = 'Ваши карты:';
-      div.appendChild(handTitle);
+	data.log = line
+  //textBox.textContent += line + '\n';
 
+  // Прокрутка только если пользователь был внизу
+  if (isAtBottom) {
+    textBox.scrollTop = textBox.scrollHeight;
+  }
+}
+  
+/* let count = 1;
+  setInterval(() => {
+    addText("Строка #" + count);
+    count++;
+  }, 1000); */
+  
+	const isAtBottom = Math.abs(textBox.scrollHeight - textBox.scrollTop - textBox.clientHeight) < 5;
+	textBox.textContent += data.log + '\n';
+	textBox.scrollTop = textBox.scrollHeight;
+	
+	
       const handContainer = document.createElement('div');
 	  handContainer.classList.add('handContainer');
      // handContainer.style.display = 'flex';
@@ -278,7 +358,7 @@ socket.on('game_state', (data) => {
 
                 card.color = color;
 				selectedCards.push({ ...card });
-				img.style.border = '2px solid green';				
+				//img.style.border = '2px solid green';				
 				wrapper.style.boxShadow = `0 0 12px 4px ${color}`;
 				
 				
@@ -298,7 +378,7 @@ socket.on('game_state', (data) => {
         } else {
           img.addEventListener('click', () => {
             if (!isMyPass(data)) {
-              alert("Сейчас не ваш ход!");
+              alert("Зараз не ваш хід!");
               return;
             }
 
@@ -329,9 +409,9 @@ socket.on('game_state', (data) => {
                 selectedCards.push({ ...card });
 				img.classList.add('hand-clicked');
 				img.parentElement.classList.add('hand-clicked');
-                img.style.border = '2px solid green';
+                //img.style.border = '2px solid green';
               } else {
-                alert("Можно выбрать только карты с одинаковым значением");
+                alert("Можна обрати тільки карти з однаковим значенням");
               }
             }
           });
@@ -340,7 +420,7 @@ socket.on('game_state', (data) => {
         handContainer.appendChild(wrapper);
       });
 
-      div.appendChild(handContainer);
+      field.appendChild(handContainer);
 
       if (!document.getElementById('playSelectedBtn')) {
 		 
@@ -350,7 +430,7 @@ socket.on('game_state', (data) => {
 		 		 
         btn = document.createElement('button');
 		
-        btn.textContent = 'Сыграть';
+        btn.textContent = 'Походити';
         btn.id = 'playSelectedBtn';
         //btn.style.marginTop = '10px';
 		btn.classList.add('neon-button-off');
@@ -366,7 +446,7 @@ socket.on('game_state', (data) => {
           );
 
           if (!allSameValue) {
-            alert("Можно сыграть только карты одного значения");
+            alert("Можна зіграти тільки карти з одним значенням");
             return;
           }
 
@@ -390,6 +470,7 @@ socket.on('game_state', (data) => {
 				let drawnCard = data.draw_pile.shift();
 				data.hands[data.current_player].push(drawnCard);
 			}
+			addText(data.current_player+" бере 4 карти і пропускає хід");
 			
 		 }
 		 
@@ -401,6 +482,7 @@ socket.on('game_state', (data) => {
 		  if (selectedCards[0].value=='skip') {
 			for (let i = 0; i < selectedCards.length; i++) {
 				nextMove(data);
+				addText(data.current_player+" пропускає хід");
 			}
 		 }
 		
@@ -415,6 +497,12 @@ socket.on('game_state', (data) => {
 		  
 
           data.draw_pile.push(...selectedCards);
+		  
+		if(selectedCards.length == 1){
+			addText(data.current_player+" ходить 1 картою");
+		} else {
+			addText(data.current_player+" ходить "+selectedCards.length+" картами");
+		}
 
           nextMove(data);
 		  
