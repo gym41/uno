@@ -1,4 +1,18 @@
 <style>
+
+
+.textBox {
+	width: 400px;
+    height: 150px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    overflow-y: auto; /* включаем вертикальный скролл при необходимости */
+    font-family: monospace, monospace;
+    background: #111;
+    color: #eee;
+    white-space: pre-wrap; /* чтобы переносить строки */
+}
+
   .hand {
     transition: transform 0.3s ease;
   }
@@ -136,6 +150,7 @@
   position: relative;
   margin-top: 20px; /* пространство для стрелки */
   color: #99cc99; /* ярко-зелёный */
+  text-align: center;
   font-weight: bold;
   font-size: 25px;
   margin-bottom: 20px;
@@ -162,6 +177,7 @@ text-shadow:
   position: relative;
   margin-top: 20px; /* пространство для стрелки */
   color: ##aaffaa; /* ярко-зелёный */
+  text-align: center;
   font-weight: bold;
     font-size: 25px;
 	margin-bottom: 20px;
@@ -261,6 +277,28 @@ text-shadow:
   
  body {
   background-color: black;
+}
+
+.field {
+  display: flex;              /* ← выравнивание по горизонтали */
+  justify-content: flex-start;    /* или flex-start / space-between, если надо */
+  gap: 20px;                  /* расстояние между блоками */
+  align-items: flex-start;    /* выравнивание по верхнему краю */
+  margin-top: 20px;
+}
+
+.textBox {
+
+  width: 300px;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  overflow-y: auto;
+  font-family: monospace, monospace;
+  background: #111;
+  color: #eee;
+  white-space: pre-wrap;
+  flex-shrink: 0; /* чтобы не сжимался при нехватке места */
 }
 
 </style>
