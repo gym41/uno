@@ -6,11 +6,11 @@
     height: 150px;
     padding: 10px;
     border: 1px solid #ccc;
-    overflow-y: auto; /* включаем вертикальный скролл при необходимости */
+    overflow-y: auto; 
     font-family: monospace, monospace;
     background: #111;
     color: #eee;
-    white-space: pre-wrap; /* чтобы переносить строки */
+    white-space: pre-wrap; 
 }
 
   .hand {
@@ -18,7 +18,7 @@
   }
 	
   .hand:hover {
-    transform: scale(1.1); /* увеличивает изображение на 5% */
+    transform: scale(1.1); 
   }
 
 .hand-clicked{
@@ -37,7 +37,7 @@
     left: 0;
     top: 0;
     width: 150px;
-/*    height: 100%;*/
+
     background: lightcoral;
   }
   
@@ -45,7 +45,7 @@
 	position: absolute;
     top: 25px;
     width: 150px;
-/*    height: 100%;*/
+
     right: 20px;
   }
 
@@ -65,15 +65,6 @@
 	justify-content: center;
 
   }
-
-/*  .tableCard_DrawPile > div {
-    width: 100px;
-    height: 100px;
-    background: lightblue;
-  }*/
-
-
-
 
 .uno-card {
 
@@ -140,16 +131,16 @@
 .horizontal-list {
 	display: flex;
 	justify-content: center;
-	gap: 10px; /* расстояние между элементами */
-	list-style: none; /* убрать маркеры */
+	gap: 10px; 
+	list-style: none; 
 	padding: 5px;
 	margin-bottom: 5px;
 }
 
 .current-player-right {
   position: relative;
-  margin-top: 20px; /* пространство для стрелки */
-  color: #99cc99; /* ярко-зелёный */
+  margin-top: 20px;
+  color: #99cc99; 
   text-align: center;
   font-weight: bold;
   font-size: 25px;
@@ -164,9 +155,9 @@ text-shadow:
 }
 
 .current-player-right::before {
-  content: "⮕"; /* или любая другая стрелка */
+  content: "⮕"; 
   position: absolute;
-  top: -30px; /* выше текста */
+  top: -30px; 
   left: 50%;
   transform: translateX(-50%);
   font-size: 40px;
@@ -175,8 +166,7 @@ text-shadow:
 
 .current-player-left {
   position: relative;
-  margin-top: 20px; /* пространство для стрелки */
-  color: #99cc99; /* ярко-зелёный */
+  margin-top: 20px; /* ярко-зелёный */
   text-align: center;
   font-weight: bold;
     font-size: 25px;
@@ -191,9 +181,9 @@ text-shadow:
 }
 
 .current-player-left::before {
-  content: "⬅"; /* или любая другая стрелка */
+  content: "⬅"; 
   position: absolute;
-  top: -30px; /* выше текста */
+  top: -30px; 
   left: 50%;
   transform: translateX(-50%);
   font-size: 40px;
@@ -203,7 +193,7 @@ text-shadow:
 .non-current-player {
   position: relative;
   font-weight: bold;
-  margin-top: 20px; /* пространство для стрелки */
+  margin-top: 20px;
   text-align: center;
   font-size: 25px;
   color: #99cc99;
@@ -216,7 +206,7 @@ text-shadow:
     position: relative;
     display: inline-block;
     padding: 14px 32px;
-    color: #99cc99; /* основной текст */
+    color: #99cc99;
     font-size: 18px;
     font-weight: bold;
     text-transform: uppercase;
@@ -234,7 +224,7 @@ text-shadow:
     position: relative;
     display: inline-block;
     padding: 14px 32px;
-    color: #99cc99; /* основной текст */
+    color: #99cc99; 
     font-size: 18px;
     font-weight: bold;
     text-transform: uppercase;
@@ -280,10 +270,10 @@ text-shadow:
 }
 
 .field {
-  display: flex;              /* ← выравнивание по горизонтали */
-  justify-content: flex-start;    /* или flex-start / space-between, если надо */
-  gap: 20px;                  /* расстояние между блоками */
-  align-items: flex-start;    /* выравнивание по верхнему краю */
+  display: flex;             
+  justify-content: flex-start;   
+  gap: 20px;                 
+  align-items: flex-start;   
   margin-top: 20px;
 }
 
@@ -298,7 +288,7 @@ text-shadow:
   background: #111;
   color: #eee;
   white-space: pre-wrap;
-  flex-shrink: 0; /* чтобы не сжимался при нехватке места */
+  flex-shrink: 0; 
 }
 
 </style>
