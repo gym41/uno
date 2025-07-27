@@ -237,6 +237,7 @@ socket.on('game_state', (data) => {
       drawImg.alt = 'колода';
       drawImg.style.width = '77px';
       drawImg.style.cursor = 'pointer';
+	  drawImg.style.borderRadius = "15%";
 
       drawImg.addEventListener('click', () => {
         if (!isMyPass(data)) {
@@ -487,13 +488,16 @@ socket.on('game_state', (data) => {
 		 }
 		
 		
-		if (selectedCards[0].value=='reverse') {
+		if (selectedCards[0].value=='reverse' && data.players.length > 2) {
 			for (let i = 0; i < selectedCards.length; i++) {
 				data.direction = (-1)*data.direction
 			}
 		}
 			
-		  
+		if (selectedCards[0].value=='reverse' && data.players.length == 2) {
+			nextMove(data);
+			addText(data.current_player+" пропускає хід");
+		}
 		  
 
           data.draw_pile.push(...selectedCards);
