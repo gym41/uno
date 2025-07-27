@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
-<title>Генератор колоды UNO</title>
+<title>Генератор колоди UNO</title>
 <script src="/socket.io/socket.io.js"></script> <!-- socket.io клиент -->
 <style>
   body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
@@ -14,24 +14,24 @@
 </head>
 <body>
 
-<h1>Генератор колоды UNO</h1>
+<h1>Генератор колоди UNO</h1>
 
 <form id="playersForm">
-  <p>Введите имена игроков (пустое поле — игрок отсутствует):</p>
-  <label>Игрок 1: <input type="text" name="player" /></label>
-  <label>Игрок 2: <input type="text" name="player" /></label>
-  <label>Игрок 3: <input type="text" name="player" /></label>
-  <label>Игрок 4: <input type="text" name="player" /></label>
-  <label>Игрок 5: <input type="text" name="player" /></label>
-  <label>Игрок 6: <input type="text" name="player" /></label>
-  <label>Игрок 7: <input type="text" name="player" /></label>
-  <label>Игрок 8: <input type="text" name="player" /></label>
+  <p>Заповніть імена гравців (пусте поле - гравець відсутній):</p>
+  <label>Гравець 1: <input type="text" name="player" /></label>
+  <label>Гравець 2: <input type="text" name="player" /></label>
+  <label>Гравець 3: <input type="text" name="player" /></label>
+  <label>Гравець 4: <input type="text" name="player" /></label>
+  <label>Гравець 5: <input type="text" name="player" /></label>
+  <label>Гравець 6: <input type="text" name="player" /></label>
+  <label>Гравець 7: <input type="text" name="player" /></label>
+  <label>Гравець 8: <input type="text" name="player" /></label>
 
-  <button type="button" id="generateBtn">Сгенерировать</button>
+  <button type="button" id="generateBtn">Згенерувати</button>
 </form>
 
-<h2>Результат (JSON):</h2>
 <pre id="result"></pre>
+
 
 <script>
 const socket = io();
@@ -83,8 +83,8 @@ socket.on('connect', () => {
       if (trimmed) players.push(trimmed);
     });
 
-    if (players.length === 0) {
-      alert('Введите хотя бы одного игрока!');
+    if (players.length < 2) {
+      alert('Додайте хоча б 2 гравців!');
       return;
     }
 
@@ -111,10 +111,15 @@ socket.on('connect', () => {
       discard: [],
       draw_pile: deck,
       current_player: players[0],
-      direction: 1
+      direction: 1,
+	  log: ""
     };
-
-    document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+	
+	result.players.forEach(player => {
+		document.getElementById('result').textContent += "https://uno-zep1.onrender.com/?name="+player+" \n \n";
+	})
+	
+    //document.getElementById('result').textContent = JSON.stringify(result, null, 2);
 	
 	saveGameState(result);
 	
