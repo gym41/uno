@@ -213,9 +213,14 @@ socket.on('game_state', (data) => {
 	
 
 
+		let topCard;
 
-      const topCard = data.draw_pile[data.draw_pile.length - 1];
-      lastTopCard = topCard;
+		if (data.firstMove === false) {
+			topCard = data.draw_pile[data.draw_pile.length - 1];
+		} else {
+	topCard = {}; // пустая карта, либо можешь выставить null
+		}
+      //lastTopCard = topCard;
 	  
 	  
 	  
@@ -228,6 +233,7 @@ socket.on('game_state', (data) => {
 				data.hands[USER].push(drawnCard);
 			}
 		}	
+		console.log(data.draw2);
 		sendMsg(USER+" бере "+data.draw2.toString()+" карти");
 		data.draw2 = 0;		
 		saveGameState(data);
@@ -401,8 +407,14 @@ socket.on('game_state', (data) => {
               return;
             }
 
+
+			
+
+
+
+
             if (selectedCards.length === 0) {
-              if (!isAvalible(data, topCard, img.dataset)) {
+              if (!isAvalible(data, topCard, img.dataset) && data.firstMove == false) {
                 alert("Цією картою ходити не можна!");
                 return;
               }
@@ -533,7 +545,7 @@ socket.on('game_state', (data) => {
 
 
 
-
+		data.firstMove = false;
           suspendUpdates = false;
           saveGameState(data);
           selectedCards = [];
